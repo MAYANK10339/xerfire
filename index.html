@@ -87,15 +87,17 @@
 
     <!-- MAIN DASHBOARD VIEW -->
     <div id="dashboardView" class="w-full max-w-4xl flex flex-col gap-8 my-auto hidden">
-        <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group">
+        
+        <!-- Upload Drop Area (Visible by default) -->
+        <div id="dropzoneContainer" class="glass-panel p-8 rounded-3xl relative overflow-hidden group">
             <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
             <div class="flex flex-col items-center justify-center text-center gap-4 py-6 pointer-events-none">
                 <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-105 group-hover:border-neonCyan transition-all">
                     <svg class="w-8 h-8 text-neonCyan" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold">Upload to Universal Cloud</h3>
-                    <p class="text-xs text-gray-400 mt-1">Generates global shareable link for everyone</p>
+                    <h3 class="text-xl font-bold">Select or Drop Files</h3>
+                    <p class="text-xs text-gray-400 mt-1">Direct upload & instant share link generator</p>
                 </div>
                 <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-gray-300">
                     <svg class="w-3.5 h-3.5 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
@@ -103,8 +105,37 @@
                 </div>
             </div>
             
-            <div id="uploadProgressContainer" class="hidden absolute bottom-0 left-0 w-full h-1 bg-gray-800">
-                <div id="uploadProgressBar" class="h-full bg-gradient-to-r from-neonCyan to-neonPurple w-0 transition-all duration-150"></div>
+            <!-- Uploading Bar -->
+            <div id="uploadProgressContainer" class="hidden absolute bottom-0 left-0 w-full h-1.5 bg-gray-800">
+                <div id="uploadProgressBar" class="h-full bg-gradient-to-r from-neonCyan to-neonPurple w-0 transition-all duration-100"></div>
+            </div>
+        </div>
+
+        <!-- INSTANT LINK GENERATED CARD (PROMINENT SUCCESS BOX) -->
+        <div id="linkSuccessCard" class="hidden glass-panel p-6 md:p-8 rounded-3xl border border-neonCyan/30 shadow-[0_0_40px_rgba(0,242,254,0.15)] flex flex-col gap-5">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-white">Share Link Ready</h3>
+                        <p id="successFileName" class="text-xs text-gray-400 truncate max-w-[220px] md:max-w-md">file.zip</p>
+                    </div>
+                </div>
+                <button onclick="resetUploadZone()" class="text-xs text-gray-400 hover:text-white flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Upload Another
+                </button>
+            </div>
+
+            <!-- Link Box with 1-Click Copy -->
+            <div class="flex items-center gap-2 bg-black/60 border border-white/10 p-2 rounded-2xl">
+                <input type="text" id="generatedLinkInput" readonly class="w-full bg-transparent px-3 text-xs md:text-sm text-neonCyan font-mono outline-none">
+                <button id="copyGeneratedBtn" onclick="copyMainGeneratedLink()" class="btn-gradient px-5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 flex-shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    <span>Copy Link</span>
+                </button>
             </div>
         </div>
 
@@ -126,7 +157,7 @@
         </div>
     </div>
 
-    <!-- UNIVERSAL DIRECT DOWNLOAD VIEW (ANY USER / ANY DEVICE) -->
+    <!-- UNIVERSAL DIRECT DOWNLOAD VIEW -->
     <div id="downloadView" class="w-full max-w-lg my-auto hidden">
         <div class="glass-panel p-8 rounded-3xl text-center flex flex-col items-center gap-6">
             <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
@@ -252,7 +283,7 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         };
 
-        // --- 3. DASHBOARD (USER-ISOLATED FILES) ---
+        // --- 3. DASHBOARD FILES MANAGEMENT ---
         const getUserFiles = () => {
             const user = getSession();
             return JSON.parse(localStorage.getItem(`xerfire_files_${user}`) || '[]');
@@ -323,13 +354,16 @@
             files = files.filter(f => f.id !== id);
             localStorage.setItem(`xerfire_files_${user}`, JSON.stringify(files));
             
-            // Delete from server
             fetch(`/api/delete?fileId=${id}`, { method: 'DELETE' }).catch(() => {});
             renderDashboardFiles();
         };
 
-        // --- 4. UNIVERSAL UPLOAD ENGINE ---
+        // --- 4. INSTANT UPLOAD & PROMINENT LINK GENERATOR ---
         const fileInput = document.getElementById('fileInput');
+        const linkSuccessCard = document.getElementById('linkSuccessCard');
+        const generatedLinkInput = document.getElementById('generatedLinkInput');
+        const successFileName = document.getElementById('successFileName');
+
         fileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             const user = getSession();
@@ -337,43 +371,71 @@
 
             const progressContainer = document.getElementById('uploadProgressContainer');
             const progressBar = document.getElementById('uploadProgressBar');
+            
             progressContainer.classList.remove('hidden');
-            progressBar.style.width = '30%';
+            progressBar.style.width = '35%';
 
             const formData = new FormData();
             formData.append('file', file);
             formData.append('owner', user);
 
             try {
-                progressBar.style.width = '70%';
+                progressBar.style.width = '80%';
                 const res = await fetch('/api/upload', {
                     method: 'POST',
                     body: formData
                 });
-                const data = await res.json();
                 
+                const data = await res.json();
                 progressBar.style.width = '100%';
+
                 if(data.success) {
+                    const fullLink = `${window.location.origin}${window.location.pathname}?fileId=${data.fileId}`;
+                    
+                    // Show Link Card prominently
+                    successFileName.innerText = file.name;
+                    generatedLinkInput.value = fullLink;
+                    linkSuccessCard.classList.remove('hidden');
+
+                    // Save to user storage list
                     saveUserFileMeta({
                         id: data.fileId,
                         name: file.name,
                         size: file.size,
                         createdAt: Date.now()
                     });
+
+                    renderDashboardFiles();
+                } else {
+                    alert('Upload failed: ' + (data.error || 'Server error'));
                 }
             } catch (err) {
                 console.error("Upload error:", err);
+                alert('Upload failed. Please check server connection.');
             } finally {
                 setTimeout(() => {
                     progressContainer.classList.add('hidden');
                     progressBar.style.width = '0%';
                     fileInput.value = '';
-                    renderDashboardFiles();
-                }, 150);
+                }, 200);
             }
         });
 
-        // --- 5. UNIVERSAL DIRECT DOWNLOAD ENGINE (AVAILABLE TO ANYONE) ---
+        window.copyMainGeneratedLink = () => {
+            const input = document.getElementById('generatedLinkInput');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            const btnSpan = document.querySelector('#copyGeneratedBtn span');
+            btnSpan.innerText = 'Copied!';
+            setTimeout(() => { btnSpan.innerText = 'Copy Link'; }, 2000);
+        };
+
+        window.resetUploadZone = () => {
+            linkSuccessCard.classList.add('hidden');
+            fileInput.value = '';
+        };
+
+        // --- 5. UNIVERSAL DIRECT DOWNLOAD ENGINE (NO WAIT / NO TIMER) ---
         const initUniversalDownloader = async (fileId) => {
             const nameEl = document.getElementById('dlFileName');
             const sizeEl = document.getElementById('dlFileSize');
@@ -387,7 +449,7 @@
                 nameEl.innerText = fileInfo.name;
                 sizeEl.innerText = formatBytes(fileInfo.size);
 
-                // Direct Server Download Stream (No warning & works everywhere)
+                // Direct Server Download
                 downloadBtn.onclick = () => {
                     window.location.href = `/api/download?fileId=${fileId}`;
                 };
@@ -416,7 +478,6 @@
             downloadView.classList.add('hidden');
 
             if(fileId) {
-                // Anyone with the link reaches this directly
                 downloadView.classList.remove('hidden');
                 initUniversalDownloader(fileId);
                 return;
