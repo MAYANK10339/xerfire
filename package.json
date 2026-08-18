@@ -1,8 +1,6 @@
 {
   "name": "xerfire",
   "version": "1.0.0",
-  "description": "Xerfire - Self-Hosted Native Vercel Engine by Mayank Mandrai",
-  "scripts": {
-    "start": "node api/upload.js"
-  }
+  "description": "Xerfire - Self Hosted Engine",
+  "private": true
 }
