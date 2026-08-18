@@ -9,15 +9,16 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-// Central storage folder for files
+// Storage folder
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
 if (!fs.existsSync(UPLOAD_DIR)) {
     fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
-// In-Memory metadata map (can also be saved to JSON file)
+// Metadata file
 const metadataFile = path.join(__dirname, 'files_meta.json');
 let fileDatabase = {};
 
@@ -26,10 +27,14 @@ if (fs.existsSync(metadataFile)) {
 }
 
 const saveMetadata = () => {
-    fs.writeFileSync(metadataFile, JSON.stringify(fileDatabase, null, 2));
+    try {
+        fs.writeFileSync(metadataFile, JSON.stringify(fileDatabase, null, 2));
+    } catch (err) {
+        console.error("Failed to save metadata:", err);
+    }
 };
 
-// Storage setup
+// Disk Storage configuration
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, UPLOAD_DIR),
     filename: (req, file, cb) => {
@@ -39,11 +44,16 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage });
+const upload = multer({ 
+    storage,
+    limits: { fileSize: 1024 * 1024 * 1024 * 50 } // 50GB direct streaming limit
+});
 
 // 1. Upload API
 app.post('/api/upload', upload.single('file'), (req, res) => {
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    if (!req.file) {
+        return res.status(400).json({ success: false, error: 'No file uploaded' });
+    }
 
     const fileId = req.generatedFileId;
     fileDatabase[fileId] = {
@@ -57,10 +67,16 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     };
     saveMetadata();
 
-    res.json({ success: true, fileId });
+    // Instant Response with generated ID
+    res.json({ 
+        success: true, 
+        fileId: fileId,
+        name: req.file.originalname,
+        size: req.file.size
+    });
 });
 
-// 2. Info API (Publicly readable by any link opener)
+// 2. Info API
 app.get('/api/info', (req, res) => {
     const { fileId } = req.query;
     const file = fileDatabase[fileId];
@@ -70,7 +86,7 @@ app.get('/api/info', (req, res) => {
     res.json({ name: file.name, size: file.size, type: file.type });
 });
 
-// 3. Direct Binary Download Stream (Zero warnings & instant for all users)
+// 3. Download API
 app.get('/api/download', (req, res) => {
     const { fileId } = req.query;
     const file = fileDatabase[fileId];
@@ -104,5 +120,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Xerfire Central Engine active on http://localhost:${PORT}`);
+    console.log(`Xerfire Engine active on http://localhost:${PORT}`);
 });
