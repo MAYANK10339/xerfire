@@ -1,0 +1,21 @@
+{
+  "name": "xerfire",
+  "version": "1.0.0",
+  "description": "Xerfire - Ultra Fast File Sharing Engine by Mayank Mandrai",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "file-sharing",
+    "engine",
+    "blob-api",
+    "indexeddb"
+  ],
+  "author": "Mayank Mandrai",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

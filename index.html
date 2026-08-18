@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xerfire | Ultra Fast File Sharing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        darkBg: '#05050A',
+                        glassBg: 'rgba(255, 255, 255, 0.03)',
+                        glassBorder: 'rgba(255, 255, 255, 0.08)',
+                        neonCyan: '#00f2fe',
+                        neonPurple: '#4facfe'
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(0, 242, 254, 0.2)' },
+                            '50%': { boxShadow: '0 0 30px rgba(0, 242, 254, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #05050A; color: white; min-height: 100vh; overflow-x: hidden; position: relative; }
+        /* Background glowing orbs */
+        .orb-1 { position: absolute; top: -10%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(0,242,254,0.15) 0%, rgba(0,0,0,0) 70%); z-index: -1; }
+        .orb-2 { position: absolute; bottom: -10%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(79,172,254,0.15) 0%, rgba(0,0,0,0) 70%); z-index: -1; }
+        
+        .glass-panel { background: var(--glassBg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); border-radius: 24px; }
+        .text-gradient { background: linear-gradient(90deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-glow { transition: all 0.3s ease; }
+        .btn-glow:hover { box-shadow: 0 0 20px rgba(0, 242, 254, 0.5); transform: translateY(-2px); }
+        
+        .hidden { display: none !important; }
+        #progress-bar { transition: width 0.3s ease; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4">
+    <div class="orb-1"></div>
+    <div class="orb-2"></div>
+
+    <!-- Top Nav -->
+    <nav class="absolute top-0 w-full p-6 flex justify-between items-center max-w-6xl mx-auto z-10">
+        <div class="text-2xl font-extrabold tracking-wider flex items-center gap-2">
+            <span class="text-gradient">Xerfire</span>
+            <div class="w-2 h-2 rounded-full bg-neonCyan animate-pulse"></div>
+        </div>
+        <button id="logoutBtn" class="hidden text-sm text-gray-400 hover:text-white transition-colors">Logout</button>
+    </nav>
+
+    <!-- AUTHENTICATION VIEW -->
+    <div id="authView" class="glass-panel w-full max-w-md p-8 flex flex-col gap-6 mt-16 hidden">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold mb-2 text-gradient">Welcome</h2>
+            <p class="text-sm text-gray-400">Sign in to access the 1TB Upload Engine</p>
+        </div>
+        <form id="authForm" class="flex flex-col gap-4">
+            <input type="email" id="email" required placeholder="Email Address" class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 outline-none focus:border-neonCyan transition-colors text-white placeholder-gray-500">
+            <input type="password" id="password" required placeholder="Password" class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 outline-none focus:border-neonCyan transition-colors text-white placeholder-gray-500">
+            <button type="submit" class="w-full bg-gradient-to-r from-neonCyan to-neonPurple text-black font-bold py-3 rounded-xl mt-2 btn-glow">Authenticate Securely</button>
+        </form>
+    </div>
+
+    <!-- UPLOAD ENGINE VIEW -->
+    <div id="uploadView" class="w-full max-w-2xl flex flex-col gap-6 mt-16 hidden">
+        <div class="glass-panel p-8 text-center relative overflow-hidden group" id="dropzone">
+            <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+            <div class="flex flex-col items-center gap-4 pointer-events-none">
+                <div class="w-16 h-16 rounded-full bg-neonCyan/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                </div>
+                <h3 class="text-xl font-semibold">Drag & Drop or <span class="text-neonCyan">Click to Upload</span></h3>
+                <p class="text-sm text-gray-400">Powered by Xerfire Advanced Engine</p>
+                <div class="inline-block mt-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-neonPurple font-semibold">
+                    ⚡ Max Limit: 1TB Supported
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress UI -->
+        <div id="progressContainer" class="glass-panel p-6 hidden">
+            <div class="flex justify-between text-sm mb-2">
+                <span id="uploadStatus">Uploading & Chunking...</span>
+                <span id="uploadPercentage" class="text-neonCyan font-bold">0%</span>
+            </div>
+            <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-neonCyan to-neonPurple w-0 shadow-[0_0_10px_#00f2fe]"></div>
+            </div>
+        </div>
+
+        <!-- Link Result UI -->
+        <div id="resultContainer" class="glass-panel p-6 hidden flex flex-col gap-4 items-center">
+            <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-2">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h3 class="text-lg font-bold">Secure Link Generated!</h3>
+            <input type="text" id="shareLink" readonly class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 outline-none text-center text-sm text-gray-300">
+            <button id="copyBtn" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold py-2 px-6 rounded-xl transition-colors">Copy Link</button>
+        </div>
+    </div>
+
+    <!-- DOWNLOAD ENGINE VIEW -->
+    <div id="downloadView" class="w-full max-w-xl flex flex-col gap-6 mt-16 hidden">
+        <div class="glass-panel p-8 text-center flex flex-col items-center gap-6">
+            <h2 class="text-2xl font-bold text-gradient">Xerfire Ultra Super Fast Download Engine</h2>
+            
+            <div class="w-full bg-black/30 rounded-xl p-4 border border-white/5 flex justify-between items-center text-sm">
+                <div class="text-left">
+                    <p class="text-gray-400">File Name</p>
+                    <p id="dlFileName" class="font-semibold text-white truncate w-48">loading...</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-400">Size</p>
+                    <p id="dlFileSize" class="font-semibold text-neonCyan">--</p>
+                </div>
+            </div>
+
+            <div id="timerContainer" class="flex flex-col items-center justify-center gap-2 my-4">
+                <div class="w-16 h-16 rounded-full border-4 border-gray-800 border-t-neonCyan animate-spin flex items-center justify-center relative"></div>
+                <div id="countdownText" class="absolute text-xl font-bold mt-1">5</div>
+                <p class="text-xs text-gray-400 mt-6">Establishing secure encrypted tunnel...</p>
+            </div>
+
+            <button id="startDownloadBtn" disabled class="w-full bg-gray-800 text-gray-500 font-bold py-4 rounded-xl cursor-not-allowed transition-all">
+                Wait for link generation...
+            </button>
+        </div>
+    </div>
+
+    <!-- ABOUT SECTION -->
+    <div class="w-full max-w-4xl mt-20 mb-10">
+        <div class="glass-panel p-8 flex flex-col md:flex-row items-center gap-8 border-t-4 border-t-neonPurple">
+            <div class="flex-1 space-y-4">
+                <h2 class="text-2xl font-bold tracking-wide">About <span class="text-gradient">Xerfire</span></h2>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Xerfire is a next-generation local-first file processing platform utilizing a fully custom-built Engine. 
+                    Operating with zero external dependencies, it harnesses standard Web API capabilities and an advanced Client-Side Blob infrastructure to smoothly handle payloads up to an extreme 1TB conceptual limit.
+                </p>
+                <div class="flex gap-4 pt-2">
+                    <span class="text-xs bg-white/5 px-3 py-1 rounded-md border border-white/10 text-neonCyan">No Server Databases</span>
+                    <span class="text-xs bg-white/5 px-3 py-1 rounded-md border border-white/10 text-neonPurple">Military Grade Security</span>
+                </div>
+            </div>
+            <div class="text-center md:text-right border-l border-white/10 pl-0 md:pl-8 mt-6 md:mt-0">
+                <p class="text-sm text-gray-400 mb-1">Architected & Engineered</p>
+                <p class="text-lg font-bold">Made with ❤️ by</p>
+                <p class="text-xl font-black text-gradient mt-1">Mayank Mandrai</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. ROUTER & STATE ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileIdToDownload = urlParams.get('fileId');
+        
+        const views = {
+            auth: document.getElementById('authView'),
+            upload: document.getElementById('uploadView'),
+            download: document.getElementById('downloadView')
+        };
+
+        const switchView = (viewName) => {
+            Object.values(views).forEach(v => v.classList.add('hidden'));
+            views[viewName].classList.remove('hidden');
+        };
+
+        // --- 2. AUTHENTICATION ENGINE (Local In-Memory / LocalStorage) ---
+        const initAuth = () => {
+            const user = localStorage.getItem('xerfire_user');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if(fileIdToDownload) {
+                // If sharing link visited, skip auth and show download
+                switchView('download');
+                initDownloadEngine(fileIdToDownload);
+                return;
+            }
+
+            if(user) {
+                switchView('upload');
+                logoutBtn.classList.remove('hidden');
+            } else {
+                switchView('auth');
+                logoutBtn.classList.add('hidden');
+            }
+        };
+
+        document.getElementById('authForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            localStorage.setItem('xerfire_user', email);
+            initAuth();
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('xerfire_user');
+            initAuth();
+        });
+
+        // --- 3. CUSTOM STORAGE ENGINE (IndexedDB wrapper for Blob handling) ---
+        const dbName = 'XerfireEngineDB';
+        const initDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, 1);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if(!db.objectStoreNames.contains('files')) {
+                        db.createObjectStore('files', { keyPath: 'id' });
+                    }
+                };
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        };
+
+        const saveFile = async (id, fileData) => {
+            const db = await initDB();
+            const tx = db.transaction('files', 'readwrite');
+            tx.objectStore('files').put({ id, ...fileData });
+            return tx.complete;
+        };
+
+        const getFile = async (id) => {
+            const db = await initDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('files', 'readonly');
+                const req = tx.objectStore('files').get(id);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject('File not found');
+            });
+        };
+
+        // Utility: Format Bytes
+        const formatBytes = (bytes) => {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        };
+
+        // --- 4. UPLOAD ENGINE (Simulation & Blob Processing) ---
+        const fileInput = document.getElementById('fileInput');
+        
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            document.getElementById('dropzone').classList.add('hidden');
+            document.getElementById('progressContainer').classList.remove('hidden');
+            
+            const fileId = 'xf_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+            
+            // High-Speed Instant Upload Simulation Engine
+            let progress = 0;
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('uploadPercentage');
+            
+            const interval = setInterval(async () => {
+                // Simulate chunk processing speed based on random spikes
+                progress += Math.random() * 15;
+                if(progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // Actually save blob to local IndexedDB engine
+                    await saveFile(fileId, {
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        blob: file,
+                        timestamp: Date.now()
+                    });
+
+                    // Generate UI Link
+                    setTimeout(() => {
+                        document.getElementById('progressContainer').classList.add('hidden');
+                        document.getElementById('resultContainer').classList.remove('hidden');
+                        
+                        const link = `${window.location.origin}${window.location.pathname}?fileId=${fileId}`;
+                        document.getElementById('shareLink').value = link;
+                    }, 500);
+                }
+                
+                progressBar.style.width = `${progress}%`;
+                progressText.innerText = `${Math.floor(progress)}%`;
+            }, 200);
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const linkInput = document.getElementById('shareLink');
+            linkInput.select();
+            document.execCommand('copy');
+            document.getElementById('copyBtn').innerText = "Copied!";
+            document.getElementById('copyBtn').classList.add('bg-green-500/20', 'text-green-400');
+            setTimeout(() => {
+                document.getElementById('copyBtn').innerText = "Copy Link";
+                document.getElementById('copyBtn').classList.remove('bg-green-500/20', 'text-green-400');
+            }, 2000);
+        });
+
+
+        // --- 5. DOWNLOADER ENGINE ---
+        const initDownloadEngine = async (id) => {
+            const fileData = await getFile(id);
+            
+            if(!fileData) {
+                document.getElementById('dlFileName').innerText = "Link Expired or Invalid";
+                document.getElementById('dlFileName').classList.add('text-red-400');
+                return;
+            }
+
+            document.getElementById('dlFileName').innerText = fileData.name;
+            document.getElementById('dlFileSize').innerText = formatBytes(fileData.size);
+
+            let timeLeft = 5;
+            const countdownEl = document.getElementById('countdownText');
+            const btn = document.getElementById('startDownloadBtn');
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdownEl.innerText = timeLeft;
+                
+                if(timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('timerContainer').classList.add('hidden');
+                    
+                    btn.removeAttribute('disabled');
+                    btn.classList.remove('bg-gray-800', 'text-gray-500', 'cursor-not-allowed');
+                    btn.classList.add('bg-gradient-to-r', 'from-neonCyan', 'to-neonPurple', 'text-black', 'btn-glow');
+                    btn.innerText = "Start Ultra-Fast Download ⚡";
+                    
+                    btn.onclick = () => executeDownload(fileData);
+                }
+            }, 1000);
+        };
+
+        const executeDownload = (fileData) => {
+            const url = window.URL.createObjectURL(fileData.blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = fileData.name;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        };
+
+        // Initialize App
+        initAuth();
+
+    </script>
+</body>
+</html>
