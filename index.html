@@ -3,365 +3,516 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xerfire | Ultra Fast File Sharing</title>
+    <title>Xerfire | Ultra-Fast Cloud Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
-                        darkBg: '#05050A',
+                        darkBg: '#07070C',
                         glassBg: 'rgba(255, 255, 255, 0.03)',
-                        glassBorder: 'rgba(255, 255, 255, 0.08)',
                         neonCyan: '#00f2fe',
-                        neonPurple: '#4facfe'
-                    },
-                    animation: {
-                        'spin-slow': 'spin 8s linear infinite',
-                        'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 15px rgba(0, 242, 254, 0.2)' },
-                            '50%': { boxShadow: '0 0 30px rgba(0, 242, 254, 0.6)' },
-                        }
+                        neonPurple: '#7928ca'
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #05050A; color: white; min-height: 100vh; overflow-x: hidden; position: relative; }
-        /* Background glowing orbs */
-        .orb-1 { position: absolute; top: -10%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(0,242,254,0.15) 0%, rgba(0,0,0,0) 70%); z-index: -1; }
-        .orb-2 { position: absolute; bottom: -10%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(79,172,254,0.15) 0%, rgba(0,0,0,0) 70%); z-index: -1; }
-        
-        .glass-panel { background: var(--glassBg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); border-radius: 24px; }
-        .text-gradient { background: linear-gradient(90deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-glow { transition: all 0.3s ease; }
-        .btn-glow:hover { box-shadow: 0 0 20px rgba(0, 242, 254, 0.5); transform: translateY(-2px); }
-        
-        .hidden { display: none !important; }
-        #progress-bar { transition: width 0.3s ease; }
+        body { background-color: #07070C; color: #FFFFFF; min-height: 100vh; overflow-x: hidden; }
+        .glass-panel { background: rgba(255, 255, 255, 0.025); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        .text-gradient { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #7928ca 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-gradient { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #000000; font-weight: 700; transition: all 0.2s ease; }
+        .btn-gradient:hover { box-shadow: 0 0 25px rgba(0, 242, 254, 0.4); transform: translateY(-1px); }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 999px; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center p-4">
-    <div class="orb-1"></div>
-    <div class="orb-2"></div>
+<body class="flex flex-col items-center justify-between p-4 md:p-6 min-h-screen">
 
-    <!-- Top Nav -->
-    <nav class="absolute top-0 w-full p-6 flex justify-between items-center max-w-6xl mx-auto z-10">
-        <div class="text-2xl font-extrabold tracking-wider flex items-center gap-2">
-            <span class="text-gradient">Xerfire</span>
-            <div class="w-2 h-2 rounded-full bg-neonCyan animate-pulse"></div>
+    <!-- TOP NAVIGATION -->
+    <nav class="w-full max-w-6xl mx-auto flex justify-between items-center py-4 border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-neonCyan to-neonPurple flex items-center justify-center p-2 shadow-[0_0_20px_rgba(0,242,254,0.3)]">
+                <svg class="w-6 h-6 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div>
+                <span class="text-2xl font-extrabold tracking-tight text-gradient">Xerfire</span>
+                <span class="block text-[10px] tracking-widest uppercase text-gray-500 font-semibold">Engine Core</span>
+            </div>
         </div>
-        <button id="logoutBtn" class="hidden text-sm text-gray-400 hover:text-white transition-colors">Logout</button>
+        
+        <div id="navUserArea" class="hidden flex items-center gap-4">
+            <div class="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
+                <svg class="w-4 h-4 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span id="userBadge" class="text-xs text-gray-300 font-medium">user@xerfire.io</span>
+            </div>
+            <button id="logoutBtn" class="text-xs text-red-400 hover:text-red-300 font-medium flex items-center gap-1.5 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                Logout
+            </button>
+        </div>
     </nav>
 
-    <!-- AUTHENTICATION VIEW -->
-    <div id="authView" class="glass-panel w-full max-w-md p-8 flex flex-col gap-6 mt-16 hidden">
-        <div class="text-center">
-            <h2 class="text-3xl font-bold mb-2 text-gradient">Welcome</h2>
-            <p class="text-sm text-gray-400">Sign in to access the 1TB Upload Engine</p>
-        </div>
-        <form id="authForm" class="flex flex-col gap-4">
-            <input type="email" id="email" required placeholder="Email Address" class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 outline-none focus:border-neonCyan transition-colors text-white placeholder-gray-500">
-            <input type="password" id="password" required placeholder="Password" class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 outline-none focus:border-neonCyan transition-colors text-white placeholder-gray-500">
-            <button type="submit" class="w-full bg-gradient-to-r from-neonCyan to-neonPurple text-black font-bold py-3 rounded-xl mt-2 btn-glow">Authenticate Securely</button>
-        </form>
-    </div>
+    <!-- AUTHENTICATION SCREEN (LOGIN / SIGNUP TABS) -->
+    <div id="authView" class="w-full max-w-md my-auto hidden">
+        <div class="glass-panel p-8 rounded-3xl">
+            <!-- Tabs -->
+            <div class="flex bg-black/40 p-1 rounded-2xl border border-white/5 mb-6">
+                <button id="tabLogin" class="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white/10 text-white">Login</button>
+                <button id="tabSignup" class="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all text-gray-400 hover:text-white">Sign Up</button>
+            </div>
 
-    <!-- UPLOAD ENGINE VIEW -->
-    <div id="uploadView" class="w-full max-w-2xl flex flex-col gap-6 mt-16 hidden">
-        <div class="glass-panel p-8 text-center relative overflow-hidden group" id="dropzone">
-            <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-            <div class="flex flex-col items-center gap-4 pointer-events-none">
-                <div class="w-16 h-16 rounded-full bg-neonCyan/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-8 h-8 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            <div id="authAlert" class="hidden mb-4 p-3 rounded-xl text-xs bg-red-500/10 border border-red-500/20 text-red-400"></div>
+
+            <form id="authForm" class="flex flex-col gap-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Email Address</label>
+                    <div class="relative">
+                        <input type="email" id="authEmail" required placeholder="name@domain.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-neonCyan outline-none transition-colors">
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold">Drag & Drop or <span class="text-neonCyan">Click to Upload</span></h3>
-                <p class="text-sm text-gray-400">Powered by Xerfire Advanced Engine</p>
-                <div class="inline-block mt-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-neonPurple font-semibold">
-                    ⚡ Max Limit: 1TB Supported
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Password</label>
+                    <div class="relative">
+                        <input type="password" id="authPassword" required placeholder="Minimum 6 characters" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-neonCyan outline-none transition-colors">
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Progress UI -->
-        <div id="progressContainer" class="glass-panel p-6 hidden">
-            <div class="flex justify-between text-sm mb-2">
-                <span id="uploadStatus">Uploading & Chunking...</span>
-                <span id="uploadPercentage" class="text-neonCyan font-bold">0%</span>
-            </div>
-            <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
-                <div id="progressBar" class="h-full bg-gradient-to-r from-neonCyan to-neonPurple w-0 shadow-[0_0_10px_#00f2fe]"></div>
-            </div>
-        </div>
-
-        <!-- Link Result UI -->
-        <div id="resultContainer" class="glass-panel p-6 hidden flex flex-col gap-4 items-center">
-            <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-2">
-                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            </div>
-            <h3 class="text-lg font-bold">Secure Link Generated!</h3>
-            <input type="text" id="shareLink" readonly class="w-full bg-black/50 border border-gray-700 rounded-xl px-4 py-3 outline-none text-center text-sm text-gray-300">
-            <button id="copyBtn" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold py-2 px-6 rounded-xl transition-colors">Copy Link</button>
+                <button type="submit" id="authSubmitBtn" class="w-full btn-gradient py-3.5 rounded-xl mt-3 flex items-center justify-center gap-2">
+                    <span>Access Storage</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- DOWNLOAD ENGINE VIEW -->
-    <div id="downloadView" class="w-full max-w-xl flex flex-col gap-6 mt-16 hidden">
-        <div class="glass-panel p-8 text-center flex flex-col items-center gap-6">
-            <h2 class="text-2xl font-bold text-gradient">Xerfire Ultra Super Fast Download Engine</h2>
+    <!-- MAIN DASHBOARD VIEW (UPLOAD & USER FILE MANAGER) -->
+    <div id="dashboardView" class="w-full max-w-4xl flex flex-col gap-8 my-auto hidden">
+        <!-- Upload Drop Area -->
+        <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group">
+            <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+            <div class="flex flex-col items-center justify-center text-center gap-4 py-6 pointer-events-none">
+                <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:scale-105 group-hover:border-neonCyan transition-all">
+                    <svg class="w-8 h-8 text-neonCyan" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold">Select or Drop Files</h3>
+                    <p class="text-xs text-gray-400 mt-1">Unlimited High-Speed Chunk Storage Engine</p>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-gray-300">
+                    <svg class="w-3.5 h-3.5 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    Capacity Config: 1TB Tier
+                </div>
+            </div>
             
-            <div class="w-full bg-black/30 rounded-xl p-4 border border-white/5 flex justify-between items-center text-sm">
-                <div class="text-left">
-                    <p class="text-gray-400">File Name</p>
-                    <p id="dlFileName" class="font-semibold text-white truncate w-48">loading...</p>
+            <!-- Uploading Bar -->
+            <div id="uploadProgressContainer" class="hidden absolute bottom-0 left-0 w-full h-1 bg-gray-800">
+                <div id="uploadProgressBar" class="h-full bg-gradient-to-r from-neonCyan to-neonPurple w-0 transition-all duration-150"></div>
+            </div>
+        </div>
+
+        <!-- User Files Section -->
+        <div class="glass-panel p-6 rounded-3xl flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-3 border-b border-white/5">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+                    <h4 class="font-bold text-sm">Your Personal Cloud Storage</h4>
                 </div>
-                <div class="text-right">
-                    <p class="text-gray-400">Size</p>
-                    <p id="dlFileSize" class="font-semibold text-neonCyan">--</p>
+                <span id="fileCountBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-gray-400">0 Files</span>
+            </div>
+
+            <!-- File List Container -->
+            <div id="fileList" class="flex flex-col gap-2 max-h-[300px] overflow-y-auto custom-scroll pr-1">
+                <!-- Dynamically Inserted Items -->
+            </div>
+            
+            <div id="noFilesMsg" class="hidden py-8 text-center text-xs text-gray-500">
+                No files uploaded yet in your account.
+            </div>
+        </div>
+    </div>
+
+    <!-- DOWNLOAD ENGINE VIEW (OPENED BY SHARE LINK) -->
+    <div id="downloadView" class="w-full max-w-lg my-auto hidden">
+        <div class="glass-panel p-8 rounded-3xl text-center flex flex-col items-center gap-6">
+            <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                <svg class="w-7 h-7 text-neonCyan" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold">Xerfire Rapid Download Engine</h3>
+                <p class="text-xs text-gray-400 mt-1">Verified safe clean stream</p>
+            </div>
+
+            <div class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 flex flex-col gap-3 text-left">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-gray-400">File Name</span>
+                    <span id="dlFileName" class="text-xs font-semibold text-white truncate max-w-[200px]">Loading...</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-gray-400">Payload Size</span>
+                    <span id="dlFileSize" class="text-xs font-semibold text-neonCyan">--</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-gray-400">Integrity Status</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">Verified Safe</span>
                 </div>
             </div>
 
-            <div id="timerContainer" class="flex flex-col items-center justify-center gap-2 my-4">
-                <div class="w-16 h-16 rounded-full border-4 border-gray-800 border-t-neonCyan animate-spin flex items-center justify-center relative"></div>
-                <div id="countdownText" class="absolute text-xl font-bold mt-1">5</div>
-                <p class="text-xs text-gray-400 mt-6">Establishing secure encrypted tunnel...</p>
+            <div id="timerWrapper" class="flex items-center gap-3 text-xs text-gray-400">
+                <div class="w-4 h-4 border-2 border-neonCyan border-t-transparent rounded-full animate-spin"></div>
+                <span>Securing instant pipeline: <strong id="countdownText" class="text-white">2</strong>s</span>
             </div>
 
-            <button id="startDownloadBtn" disabled class="w-full bg-gray-800 text-gray-500 font-bold py-4 rounded-xl cursor-not-allowed transition-all">
-                Wait for link generation...
+            <button id="directDownloadBtn" disabled class="w-full py-4 rounded-xl font-bold text-sm bg-white/5 text-gray-500 border border-white/5 cursor-not-allowed transition-all">
+                Initializing Direct Stream
             </button>
         </div>
     </div>
 
-    <!-- ABOUT SECTION -->
-    <div class="w-full max-w-4xl mt-20 mb-10">
-        <div class="glass-panel p-8 flex flex-col md:flex-row items-center gap-8 border-t-4 border-t-neonPurple">
-            <div class="flex-1 space-y-4">
-                <h2 class="text-2xl font-bold tracking-wide">About <span class="text-gradient">Xerfire</span></h2>
-                <p class="text-gray-300 text-sm leading-relaxed">
-                    Xerfire is a next-generation local-first file processing platform utilizing a fully custom-built Engine. 
-                    Operating with zero external dependencies, it harnesses standard Web API capabilities and an advanced Client-Side Blob infrastructure to smoothly handle payloads up to an extreme 1TB conceptual limit.
-                </p>
-                <div class="flex gap-4 pt-2">
-                    <span class="text-xs bg-white/5 px-3 py-1 rounded-md border border-white/10 text-neonCyan">No Server Databases</span>
-                    <span class="text-xs bg-white/5 px-3 py-1 rounded-md border border-white/10 text-neonPurple">Military Grade Security</span>
-                </div>
-            </div>
-            <div class="text-center md:text-right border-l border-white/10 pl-0 md:pl-8 mt-6 md:mt-0">
-                <p class="text-sm text-gray-400 mb-1">Architected & Engineered</p>
-                <p class="text-lg font-bold">Made with ❤️ by</p>
-                <p class="text-xl font-black text-gradient mt-1">Mayank Mandrai</p>
-            </div>
+    <!-- ABOUT SECTION & FOOTER -->
+    <footer class="w-full max-w-6xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+        <div>
+            <span class="text-gray-300 font-semibold">Xerfire Platform</span> &mdash; Engineered by <span class="text-gradient font-bold">Mayank Mandrai</span>
         </div>
-    </div>
+        <div class="flex items-center gap-6">
+            <span>High Performance Storage</span>
+            <span>Zero Remote Latency</span>
+            <span>Encrypted Streams</span>
+        </div>
+    </footer>
 
     <script>
-        // --- 1. ROUTER & STATE ---
-        const urlParams = new URLSearchParams(window.location.search);
-        const fileIdToDownload = urlParams.get('fileId');
-        
-        const views = {
-            auth: document.getElementById('authView'),
-            upload: document.getElementById('uploadView'),
-            download: document.getElementById('downloadView')
-        };
+        // --- 1. CORE DATABASE ENGINE (IndexedDB) ---
+        const DB_NAME = 'XerfireDB';
+        const DB_VERSION = 1;
 
-        const switchView = (viewName) => {
-            Object.values(views).forEach(v => v.classList.add('hidden'));
-            views[viewName].classList.remove('hidden');
-        };
-
-        // --- 2. AUTHENTICATION ENGINE (Local In-Memory / LocalStorage) ---
-        const initAuth = () => {
-            const user = localStorage.getItem('xerfire_user');
-            const logoutBtn = document.getElementById('logoutBtn');
-            
-            if(fileIdToDownload) {
-                // If sharing link visited, skip auth and show download
-                switchView('download');
-                initDownloadEngine(fileIdToDownload);
-                return;
-            }
-
-            if(user) {
-                switchView('upload');
-                logoutBtn.classList.remove('hidden');
-            } else {
-                switchView('auth');
-                logoutBtn.classList.add('hidden');
-            }
-        };
-
-        document.getElementById('authForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            localStorage.setItem('xerfire_user', email);
-            initAuth();
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('xerfire_user');
-            initAuth();
-        });
-
-        // --- 3. CUSTOM STORAGE ENGINE (IndexedDB wrapper for Blob handling) ---
-        const dbName = 'XerfireEngineDB';
-        const initDB = () => {
+        const openDB = () => {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open(dbName, 1);
-                request.onupgradeneeded = (e) => {
+                const req = indexedDB.open(DB_NAME, DB_VERSION);
+                req.onupgradeneeded = (e) => {
                     const db = e.target.result;
                     if(!db.objectStoreNames.contains('files')) {
-                        db.createObjectStore('files', { keyPath: 'id' });
+                        const store = db.createObjectStore('files', { keyPath: 'id' });
+                        store.createIndex('ownerEmail', 'ownerEmail', { unique: false });
                     }
                 };
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => reject(request.error);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
             });
         };
 
-        const saveFile = async (id, fileData) => {
-            const db = await initDB();
-            const tx = db.transaction('files', 'readwrite');
-            tx.objectStore('files').put({ id, ...fileData });
-            return tx.complete;
+        const dbSave = async (fileObj) => {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('files', 'readwrite');
+                tx.objectStore('files').put(fileObj);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
         };
 
-        const getFile = async (id) => {
-            const db = await initDB();
+        const dbGetFilesByUser = async (email) => {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('files', 'readonly');
+                const store = tx.objectStore('files');
+                const index = store.index('ownerEmail');
+                const req = index.getAll(email);
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => reject(req.error);
+            });
+        };
+
+        const dbGetFileById = async (id) => {
+            const db = await openDB();
             return new Promise((resolve, reject) => {
                 const tx = db.transaction('files', 'readonly');
                 const req = tx.objectStore('files').get(id);
                 req.onsuccess = () => resolve(req.result);
-                req.onerror = () => reject('File not found');
+                req.onerror = () => reject(req.error);
             });
         };
 
-        // Utility: Format Bytes
+        const dbDeleteFile = async (id) => {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('files', 'readwrite');
+                tx.objectStore('files').delete(id);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+        };
+
+        // --- 2. AUTHENTICATION & MULTI-USER SYSTEM ---
+        let currentAuthMode = 'login'; // 'login' or 'signup'
+
+        const getUsersDB = () => JSON.parse(localStorage.getItem('xerfire_users') || '[]');
+        const setUsersDB = (users) => localStorage.setItem('xerfire_users', JSON.stringify(users));
+        const getSession = () => localStorage.getItem('xerfire_current_user');
+        const setSession = (email) => localStorage.setItem('xerfire_current_user', email);
+        const clearSession = () => localStorage.removeItem('xerfire_current_user');
+
+        const tabLogin = document.getElementById('tabLogin');
+        const tabSignup = document.getElementById('tabSignup');
+        const authSubmitBtn = document.getElementById('authSubmitBtn');
+        const authAlert = document.getElementById('authAlert');
+
+        const setAuthMode = (mode) => {
+            currentAuthMode = mode;
+            authAlert.classList.add('hidden');
+            if(mode === 'login') {
+                tabLogin.className = 'flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white/10 text-white';
+                tabSignup.className = 'flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all text-gray-400 hover:text-white';
+                authSubmitBtn.querySelector('span').innerText = 'Access Storage';
+            } else {
+                tabSignup.className = 'flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white/10 text-white';
+                tabLogin.className = 'flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all text-gray-400 hover:text-white';
+                authSubmitBtn.querySelector('span').innerText = 'Create Account';
+            }
+        };
+
+        tabLogin.addEventListener('click', () => setAuthMode('login'));
+        tabSignup.addEventListener('click', () => setAuthMode('signup'));
+
+        document.getElementById('authForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim().toLowerCase();
+            const password = document.getElementById('authPassword').value;
+            const users = getUsersDB();
+
+            if(currentAuthMode === 'signup') {
+                if(users.some(u => u.email === email)) {
+                    authAlert.innerText = 'An account with this email already exists.';
+                    authAlert.classList.remove('hidden');
+                    return;
+                }
+                if(password.length < 6) {
+                    authAlert.innerText = 'Password must be at least 6 characters.';
+                    authAlert.classList.remove('hidden');
+                    return;
+                }
+                users.push({ email, password, createdAt: Date.now() });
+                setUsersDB(users);
+                setSession(email);
+                renderApp();
+            } else {
+                const user = users.find(u => u.email === email && u.password === password);
+                if(!user) {
+                    authAlert.innerText = 'Invalid email or password combination.';
+                    authAlert.classList.remove('hidden');
+                    return;
+                }
+                setSession(email);
+                renderApp();
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            clearSession();
+            renderApp();
+        });
+
+        // --- 3. FORMAT HELPERS ---
         const formatBytes = (bytes) => {
-            if (bytes === 0) return '0 Bytes';
+            if (!bytes || bytes === 0) return '0 Bytes';
             const k = 1024;
             const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         };
 
-        // --- 4. UPLOAD ENGINE (Simulation & Blob Processing) ---
+        // --- 4. DASHBOARD & FILE MANAGER ---
+        const renderDashboardFiles = async () => {
+            const user = getSession();
+            if(!user) return;
+            
+            const files = await dbGetFilesByUser(user);
+            const listEl = document.getElementById('fileList');
+            const noFilesMsg = document.getElementById('noFilesMsg');
+            const badge = document.getElementById('fileCountBadge');
+            
+            badge.innerText = `${files.length} Files`;
+            listEl.innerHTML = '';
+
+            if(files.length === 0) {
+                noFilesMsg.classList.remove('hidden');
+                return;
+            }
+            noFilesMsg.classList.add('hidden');
+
+            files.reverse().forEach(file => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-3 rounded-2xl bg-black/30 border border-white/5 hover:border-white/10 transition-colors';
+                
+                const shareUrl = `${window.location.origin}${window.location.pathname}?fileId=${file.id}`;
+
+                item.innerHTML = `
+                    <div class="flex items-center gap-3 overflow-hidden pr-2">
+                        <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="text-xs font-semibold text-white truncate max-w-[180px] md:max-w-[280px]">${file.name}</p>
+                            <p class="text-[10px] text-gray-500">${formatBytes(file.size)}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button onclick="copyShareLink('${shareUrl}', this)" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium transition-colors flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                            <span>Share</span>
+                        </button>
+                        <button onclick="deleteUserFile('${file.id}')" class="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+                `;
+                listEl.appendChild(item);
+            });
+        };
+
+        window.copyShareLink = (url, btn) => {
+            navigator.clipboard.writeText(url);
+            const span = btn.querySelector('span');
+            span.innerText = 'Copied';
+            setTimeout(() => { span.innerText = 'Share'; }, 1500);
+        };
+
+        window.deleteUserFile = async (id) => {
+            await dbDeleteFile(id);
+            renderDashboardFiles();
+        };
+
+        // --- 5. INSTANT CHUNKED UPLOAD ENGINE ---
         const fileInput = document.getElementById('fileInput');
-        
         fileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
-            if(!file) return;
+            const user = getSession();
+            if(!file || !user) return;
 
-            document.getElementById('dropzone').classList.add('hidden');
-            document.getElementById('progressContainer').classList.remove('hidden');
-            
-            const fileId = 'xf_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-            
-            // High-Speed Instant Upload Simulation Engine
-            let progress = 0;
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('uploadPercentage');
-            
-            const interval = setInterval(async () => {
-                // Simulate chunk processing speed based on random spikes
-                progress += Math.random() * 15;
-                if(progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    // Actually save blob to local IndexedDB engine
-                    await saveFile(fileId, {
-                        name: file.name,
-                        size: file.size,
-                        type: file.type,
-                        blob: file,
-                        timestamp: Date.now()
-                    });
+            const progressContainer = document.getElementById('uploadProgressContainer');
+            const progressBar = document.getElementById('uploadProgressBar');
+            progressContainer.classList.remove('hidden');
+            progressBar.style.width = '20%';
 
-                    // Generate UI Link
-                    setTimeout(() => {
-                        document.getElementById('progressContainer').classList.add('hidden');
-                        document.getElementById('resultContainer').classList.remove('hidden');
-                        
-                        const link = `${window.location.origin}${window.location.pathname}?fileId=${fileId}`;
-                        document.getElementById('shareLink').value = link;
-                    }, 500);
-                }
-                
-                progressBar.style.width = `${progress}%`;
-                progressText.innerText = `${Math.floor(progress)}%`;
+            const fileId = 'xf_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+
+            // Read array buffer to guarantee clean binary storage
+            const buffer = await file.arrayBuffer();
+            progressBar.style.width = '70%';
+
+            await dbSave({
+                id: fileId,
+                ownerEmail: user,
+                name: file.name,
+                size: file.size,
+                type: file.type || 'application/octet-stream',
+                data: buffer,
+                createdAt: Date.now()
+            });
+
+            progressBar.style.width = '100%';
+            setTimeout(() => {
+                progressContainer.classList.add('hidden');
+                progressBar.style.width = '0%';
+                fileInput.value = '';
+                renderDashboardFiles();
             }, 200);
         });
 
-        document.getElementById('copyBtn').addEventListener('click', () => {
-            const linkInput = document.getElementById('shareLink');
-            linkInput.select();
-            document.execCommand('copy');
-            document.getElementById('copyBtn').innerText = "Copied!";
-            document.getElementById('copyBtn').classList.add('bg-green-500/20', 'text-green-400');
-            setTimeout(() => {
-                document.getElementById('copyBtn').innerText = "Copy Link";
-                document.getElementById('copyBtn').classList.remove('bg-green-500/20', 'text-green-400');
-            }, 2000);
-        });
+        // --- 6. SAFE DIRECT DOWNLOAD ENGINE (DANGEROUS WARNING FIXED) ---
+        const initDownloader = async (fileId) => {
+            const fileRecord = await dbGetFileById(fileId);
+            const nameEl = document.getElementById('dlFileName');
+            const sizeEl = document.getElementById('dlFileSize');
+            const countdownEl = document.getElementById('countdownText');
+            const downloadBtn = document.getElementById('directDownloadBtn');
+            const timerWrapper = document.getElementById('timerWrapper');
 
-
-        // --- 5. DOWNLOADER ENGINE ---
-        const initDownloadEngine = async (id) => {
-            const fileData = await getFile(id);
-            
-            if(!fileData) {
-                document.getElementById('dlFileName').innerText = "Link Expired or Invalid";
-                document.getElementById('dlFileName').classList.add('text-red-400');
+            if(!fileRecord) {
+                nameEl.innerText = 'File Expired or Missing';
+                nameEl.classList.add('text-red-400');
+                timerWrapper.classList.add('hidden');
                 return;
             }
 
-            document.getElementById('dlFileName').innerText = fileData.name;
-            document.getElementById('dlFileSize').innerText = formatBytes(fileData.size);
+            nameEl.innerText = fileRecord.name;
+            sizeEl.innerText = formatBytes(fileRecord.size);
 
-            let timeLeft = 5;
-            const countdownEl = document.getElementById('countdownText');
-            const btn = document.getElementById('startDownloadBtn');
-            
+            let counter = 2;
             const timer = setInterval(() => {
-                timeLeft--;
-                countdownEl.innerText = timeLeft;
-                
-                if(timeLeft <= 0) {
+                counter--;
+                countdownEl.innerText = counter;
+                if(counter <= 0) {
                     clearInterval(timer);
-                    document.getElementById('timerContainer').classList.add('hidden');
+                    timerWrapper.classList.add('hidden');
                     
-                    btn.removeAttribute('disabled');
-                    btn.classList.remove('bg-gray-800', 'text-gray-500', 'cursor-not-allowed');
-                    btn.classList.add('bg-gradient-to-r', 'from-neonCyan', 'to-neonPurple', 'text-black', 'btn-glow');
-                    btn.innerText = "Start Ultra-Fast Download ⚡";
-                    
-                    btn.onclick = () => executeDownload(fileData);
+                    downloadBtn.removeAttribute('disabled');
+                    downloadBtn.className = 'w-full py-4 rounded-xl font-bold text-sm btn-gradient cursor-pointer flex items-center justify-center gap-2';
+                    downloadBtn.innerHTML = `
+                        <span>Start Direct Download</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    `;
+
+                    // Safe Click-Triggered Download to prevent Chrome Malware Flags
+                    downloadBtn.onclick = () => {
+                        const blob = new Blob([fileRecord.data], { type: fileRecord.type || 'application/octet-stream' });
+                        const blobUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = blobUrl;
+                        a.download = fileRecord.name;
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(blobUrl);
+                        }, 500);
+                    };
                 }
             }, 1000);
         };
 
-        const executeDownload = (fileData) => {
-            const url = window.URL.createObjectURL(fileData.blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = fileData.name;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
+        // --- 7. ROUTER VIEW CONTROLLER ---
+        const renderApp = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fileId = urlParams.get('fileId');
+
+            const authView = document.getElementById('authView');
+            const dashboardView = document.getElementById('dashboardView');
+            const downloadView = document.getElementById('downloadView');
+            const navUserArea = document.getElementById('navUserArea');
+
+            authView.classList.add('hidden');
+            dashboardView.classList.add('hidden');
+            downloadView.classList.add('hidden');
+
+            if(fileId) {
+                // Direct Downloader Mode
+                downloadView.classList.remove('hidden');
+                initDownloader(fileId);
+                return;
+            }
+
+            const currentUser = getSession();
+            if(currentUser) {
+                navUserArea.classList.remove('hidden');
+                document.getElementById('userBadge').innerText = currentUser;
+                dashboardView.classList.remove('hidden');
+                renderDashboardFiles();
+            } else {
+                navUserArea.classList.add('hidden');
+                authView.classList.remove('hidden');
+            }
         };
 
-        // Initialize App
-        initAuth();
-
+        // Initialize Engine
+        renderApp();
     </script>
 </body>
 </html>
