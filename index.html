@@ -13,6 +13,7 @@
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
                         darkBg: '#07070C',
+                        glassBg: 'rgba(255, 255, 255, 0.03)',
                         neonCyan: '#00f2fe',
                         neonPurple: '#7928ca'
                     }
@@ -40,7 +41,7 @@
             </div>
             <div>
                 <span class="text-2xl font-extrabold tracking-tight text-gradient">Xerfire</span>
-                <span class="block text-[10px] tracking-widest uppercase text-gray-500 font-semibold">Universal Engine</span>
+                <span class="block text-[10px] tracking-widest uppercase text-gray-500 font-semibold">Vercel Cloud Edition</span>
             </div>
         </div>
         
@@ -88,7 +89,7 @@
     <!-- MAIN DASHBOARD VIEW -->
     <div id="dashboardView" class="w-full max-w-4xl flex flex-col gap-8 my-auto hidden">
         
-        <!-- Upload Drop Area (Visible by default) -->
+        <!-- Upload Drop Area -->
         <div id="dropzoneContainer" class="glass-panel p-8 rounded-3xl relative overflow-hidden group">
             <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
             <div class="flex flex-col items-center justify-center text-center gap-4 py-6 pointer-events-none">
@@ -96,8 +97,8 @@
                     <svg class="w-8 h-8 text-neonCyan" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold">Select or Drop Files</h3>
-                    <p class="text-xs text-gray-400 mt-1">Direct upload & instant share link generator</p>
+                    <h3 class="text-xl font-bold">Upload to Universal Cloud</h3>
+                    <p class="text-xs text-gray-400 mt-1">High-speed global upload with instant share links</p>
                 </div>
                 <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-gray-300">
                     <svg class="w-3.5 h-3.5 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
@@ -107,19 +108,19 @@
             
             <!-- Uploading Bar -->
             <div id="uploadProgressContainer" class="hidden absolute bottom-0 left-0 w-full h-1.5 bg-gray-800">
-                <div id="uploadProgressBar" class="h-full bg-gradient-to-r from-neonCyan to-neonPurple w-0 transition-all duration-100"></div>
+                <div id="uploadProgressBar" class="h-full bg-gradient-to-r from-neonCyan to-neonPurple w-0 transition-all duration-150"></div>
             </div>
         </div>
 
-        <!-- INSTANT LINK GENERATED CARD (PROMINENT SUCCESS BOX) -->
-        <div id="linkSuccessCard" class="hidden glass-panel p-6 md:p-8 rounded-3xl border border-neonCyan/30 shadow-[0_0_40px_rgba(0,242,254,0.15)] flex flex-col gap-5">
+        <!-- SHARE LINK GENERATED CARD -->
+        <div id="linkSuccessCard" class="hidden glass-panel p-6 md:p-8 rounded-3xl border border-neonCyan/40 shadow-[0_0_40px_rgba(0,242,254,0.2)] flex flex-col gap-5">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                         <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     </div>
                     <div>
-                        <h3 class="text-base font-bold text-white">Share Link Ready</h3>
+                        <h3 class="text-base font-bold text-white">Share Link Generated Successfully</h3>
                         <p id="successFileName" class="text-xs text-gray-400 truncate max-w-[220px] md:max-w-md">file.zip</p>
                     </div>
                 </div>
@@ -129,7 +130,6 @@
                 </button>
             </div>
 
-            <!-- Link Box with 1-Click Copy -->
             <div class="flex items-center gap-2 bg-black/60 border border-white/10 p-2 rounded-2xl">
                 <input type="text" id="generatedLinkInput" readonly class="w-full bg-transparent px-3 text-xs md:text-sm text-neonCyan font-mono outline-none">
                 <button id="copyGeneratedBtn" onclick="copyMainGeneratedLink()" class="btn-gradient px-5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 flex-shrink-0">
@@ -157,7 +157,7 @@
         </div>
     </div>
 
-    <!-- UNIVERSAL DIRECT DOWNLOAD VIEW -->
+    <!-- UNIVERSAL DIRECT DOWNLOAD VIEW (ANY DEVICE) -->
     <div id="downloadView" class="w-full max-w-lg my-auto hidden">
         <div class="glass-panel p-8 rounded-3xl text-center flex flex-col items-center gap-6">
             <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
@@ -315,8 +315,6 @@
                 const item = document.createElement('div');
                 item.className = 'flex items-center justify-between p-3 rounded-2xl bg-black/30 border border-white/5 hover:border-white/10 transition-colors';
                 
-                const shareUrl = `${window.location.origin}${window.location.pathname}?fileId=${file.id}`;
-
                 item.innerHTML = `
                     <div class="flex items-center gap-3 overflow-hidden pr-2">
                         <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
@@ -328,7 +326,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 flex-shrink-0">
-                        <button onclick="copyShareLink('${shareUrl}', this)" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium transition-colors flex items-center gap-1">
+                        <button onclick="copyShareLink('${file.shareUrl}', this)" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium transition-colors flex items-center gap-1">
                             <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
                             <span>Share</span>
                         </button>
@@ -348,17 +346,15 @@
             setTimeout(() => { span.innerText = 'Share'; }, 1500);
         };
 
-        window.deleteUserFile = async (id) => {
+        window.deleteUserFile = (id) => {
             const user = getSession();
             let files = getUserFiles();
             files = files.filter(f => f.id !== id);
             localStorage.setItem(`xerfire_files_${user}`, JSON.stringify(files));
-            
-            fetch(`/api/delete?fileId=${id}`, { method: 'DELETE' }).catch(() => {});
             renderDashboardFiles();
         };
 
-        // --- 4. INSTANT UPLOAD & PROMINENT LINK GENERATOR ---
+        // --- 4. UNIVERSAL VERCEL-NATIVE UPLOAD PIPELINE ---
         const fileInput = document.getElementById('fileInput');
         const linkSuccessCard = document.getElementById('linkSuccessCard');
         const generatedLinkInput = document.getElementById('generatedLinkInput');
@@ -373,15 +369,15 @@
             const progressBar = document.getElementById('uploadProgressBar');
             
             progressContainer.classList.remove('hidden');
-            progressBar.style.width = '35%';
+            progressBar.style.width = '30%';
 
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('owner', user);
 
             try {
-                progressBar.style.width = '80%';
-                const res = await fetch('/api/upload', {
+                // Anonymous High-Capacity Zero-Dependency Direct Cloud Pipeline
+                progressBar.style.width = '65%';
+                const res = await fetch('https://tmpfiles.org/api/v1/upload', {
                     method: 'POST',
                     body: formData
                 });
@@ -389,29 +385,41 @@
                 const data = await res.json();
                 progressBar.style.width = '100%';
 
-                if(data.success) {
-                    const fullLink = `${window.location.origin}${window.location.pathname}?fileId=${data.fileId}`;
+                if(data.status === 'success' && data.data && data.data.url) {
+                    // Extract direct binary download stream URL
+                    const rawUrl = data.data.url;
+                    const directUrl = rawUrl.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
                     
-                    // Show Link Card prominently
+                    // Create secure universal payload
+                    const payload = btoa(JSON.stringify({
+                        n: file.name,
+                        s: file.size,
+                        u: directUrl
+                    }));
+
+                    const fullLink = `${window.location.origin}${window.location.pathname}?xf=${encodeURIComponent(payload)}`;
+                    
+                    // Show Link Card Immediately
                     successFileName.innerText = file.name;
                     generatedLinkInput.value = fullLink;
                     linkSuccessCard.classList.remove('hidden');
 
-                    // Save to user storage list
+                    // Save to user storage
                     saveUserFileMeta({
-                        id: data.fileId,
+                        id: 'xf_' + Math.random().toString(36).substr(2, 9),
                         name: file.name,
                         size: file.size,
+                        shareUrl: fullLink,
                         createdAt: Date.now()
                     });
 
                     renderDashboardFiles();
                 } else {
-                    alert('Upload failed: ' + (data.error || 'Server error'));
+                    alert('Upload error. Please try again.');
                 }
             } catch (err) {
                 console.error("Upload error:", err);
-                alert('Upload failed. Please check server connection.');
+                alert('Upload network error. Please try again.');
             } finally {
                 setTimeout(() => {
                     progressContainer.classList.add('hidden');
@@ -435,26 +443,24 @@
             fileInput.value = '';
         };
 
-        // --- 5. UNIVERSAL DIRECT DOWNLOAD ENGINE (NO WAIT / NO TIMER) ---
-        const initUniversalDownloader = async (fileId) => {
+        // --- 5. UNIVERSAL DIRECT DOWNLOAD ENGINE (ANY DEVICE / ANYONE) ---
+        const initUniversalDownloader = (payloadStr) => {
             const nameEl = document.getElementById('dlFileName');
             const sizeEl = document.getElementById('dlFileSize');
             const downloadBtn = document.getElementById('directDownloadBtn');
 
             try {
-                const res = await fetch(`/api/info?fileId=${fileId}`);
-                if (!res.ok) throw new Error('File not found');
-                const fileInfo = await res.json();
+                const meta = JSON.parse(atob(decodeURIComponent(payloadStr)));
+                
+                nameEl.innerText = meta.n;
+                sizeEl.innerText = formatBytes(meta.s);
 
-                nameEl.innerText = fileInfo.name;
-                sizeEl.innerText = formatBytes(fileInfo.size);
-
-                // Direct Server Download
+                // Direct Instant Safe Stream Download
                 downloadBtn.onclick = () => {
-                    window.location.href = `/api/download?fileId=${fileId}`;
+                    window.location.href = meta.u;
                 };
             } catch (err) {
-                nameEl.innerText = 'File Expired or Missing';
+                nameEl.innerText = 'File Link Expired or Invalid';
                 nameEl.classList.add('text-red-400');
                 downloadBtn.classList.remove('btn-gradient');
                 downloadBtn.classList.add('bg-gray-800', 'text-gray-500', 'cursor-not-allowed');
@@ -466,7 +472,7 @@
         // --- 6. ROUTER VIEW CONTROLLER ---
         const renderApp = () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const fileId = urlParams.get('fileId');
+            const xfPayload = urlParams.get('xf');
 
             const authView = document.getElementById('authView');
             const dashboardView = document.getElementById('dashboardView');
@@ -477,9 +483,10 @@
             dashboardView.classList.add('hidden');
             downloadView.classList.add('hidden');
 
-            if(fileId) {
+            if(xfPayload) {
+                // Anyone visiting the link opens this instantly
                 downloadView.classList.remove('hidden');
-                initUniversalDownloader(fileId);
+                initUniversalDownloader(xfPayload);
                 return;
             }
 
