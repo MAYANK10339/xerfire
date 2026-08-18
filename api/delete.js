@@ -10,14 +10,8 @@ module.exports = async (req, res) => {
     const metaPath = path.join(STORAGE_DIR, `${fileId}.json`);
     const filePath = path.join(STORAGE_DIR, `${fileId}.dat`);
 
-    if (!fs.existsSync(metaPath) || !fs.existsSync(filePath)) {
-        return res.status(404).json({ error: 'File not found or expired' });
-    }
+    if (fs.existsSync(metaPath)) fs.unlinkSync(metaPath);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
-    try {
-        const meta = JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
-        return res.status(200).json(meta);
-    } catch (e) {
-        return res.status(500).json({ error: 'Failed to read metadata' });
-    }
+    return res.status(200).json({ success: true });
 };
