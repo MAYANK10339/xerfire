@@ -13,7 +13,6 @@
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
                         darkBg: '#07070C',
-                        glassBg: 'rgba(255, 255, 255, 0.03)',
                         neonCyan: '#00f2fe',
                         neonPurple: '#7928ca'
                     }
@@ -35,13 +34,13 @@
 
     <!-- TOP NAVIGATION -->
     <nav class="w-full max-w-6xl mx-auto flex justify-between items-center py-4 border-b border-white/5">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href = window.location.origin + window.location.pathname">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-neonCyan to-neonPurple flex items-center justify-center p-2 shadow-[0_0_20px_rgba(0,242,254,0.3)]">
                 <svg class="w-6 h-6 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
             <div>
                 <span class="text-2xl font-extrabold tracking-tight text-gradient">Xerfire</span>
-                <span class="block text-[10px] tracking-widest uppercase text-gray-500 font-semibold">Engine Core</span>
+                <span class="block text-[10px] tracking-widest uppercase text-gray-500 font-semibold">Universal Engine</span>
             </div>
         </div>
         
@@ -57,7 +56,7 @@
         </div>
     </nav>
 
-    <!-- AUTHENTICATION SCREEN (LOGIN / SIGNUP) -->
+    <!-- AUTHENTICATION SCREEN -->
     <div id="authView" class="w-full max-w-md my-auto hidden">
         <div class="glass-panel p-8 rounded-3xl">
             <div class="flex bg-black/40 p-1 rounded-2xl border border-white/5 mb-6">
@@ -86,7 +85,7 @@
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD VIEW (UPLOAD & USER FILE MANAGER) -->
+    <!-- MAIN DASHBOARD VIEW -->
     <div id="dashboardView" class="w-full max-w-4xl flex flex-col gap-8 my-auto hidden">
         <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group">
             <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
@@ -95,8 +94,8 @@
                     <svg class="w-8 h-8 text-neonCyan" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold">Select or Drop Files</h3>
-                    <p class="text-xs text-gray-400 mt-1">Unlimited High-Speed Chunk Storage Engine</p>
+                    <h3 class="text-xl font-bold">Upload to Universal Cloud</h3>
+                    <p class="text-xs text-gray-400 mt-1">Generates global shareable link for everyone</p>
                 </div>
                 <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-semibold text-gray-300">
                     <svg class="w-3.5 h-3.5 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
@@ -109,12 +108,12 @@
             </div>
         </div>
 
-        <!-- User Files Section -->
+        <!-- Personal Files Area -->
         <div class="glass-panel p-6 rounded-3xl flex flex-col gap-4">
             <div class="flex items-center justify-between pb-3 border-b border-white/5">
                 <div class="flex items-center gap-2">
                     <svg class="w-5 h-5 text-neonCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
-                    <h4 class="font-bold text-sm">Your Personal Cloud Storage</h4>
+                    <h4 class="font-bold text-sm">Your Uploaded Files</h4>
                 </div>
                 <span id="fileCountBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-gray-400">0 Files</span>
             </div>
@@ -122,12 +121,12 @@
             <div id="fileList" class="flex flex-col gap-2 max-h-[300px] overflow-y-auto custom-scroll pr-1"></div>
             
             <div id="noFilesMsg" class="hidden py-8 text-center text-xs text-gray-500">
-                No files uploaded yet in your account.
+                No files uploaded yet. Upload a file above to generate share links.
             </div>
         </div>
     </div>
 
-    <!-- ZERO-WAIT INSTANT DOWNLOAD VIEW -->
+    <!-- UNIVERSAL DIRECT DOWNLOAD VIEW (ANY USER / ANY DEVICE) -->
     <div id="downloadView" class="w-full max-w-lg my-auto hidden">
         <div class="glass-panel p-8 rounded-3xl text-center flex flex-col items-center gap-6">
             <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
@@ -136,7 +135,7 @@
 
             <div>
                 <h3 class="text-xl font-bold">Xerfire Rapid Download Engine</h3>
-                <p class="text-xs text-gray-400 mt-1">Instant pipeline ready &bull; Zero delay</p>
+                <p class="text-xs text-gray-400 mt-1">Universal Direct Stream &bull; Zero Delay</p>
             </div>
 
             <div class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 flex flex-col gap-3 text-left">
@@ -149,12 +148,12 @@
                     <span id="dlFileSize" class="text-xs font-semibold text-neonCyan">--</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-xs text-gray-400">Integrity Status</span>
-                    <span class="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">Verified Safe</span>
+                    <span class="text-xs text-gray-400">Security Check</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">Safe Verified Stream</span>
                 </div>
             </div>
 
-            <!-- Direct Instant Download Button (No Waiting / Timer) -->
+            <!-- Instant Direct Download Button -->
             <button id="directDownloadBtn" class="w-full py-4 rounded-xl font-bold text-sm btn-gradient cursor-pointer flex items-center justify-center gap-2">
                 <span>Download Now</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
@@ -168,75 +167,14 @@
             <span class="text-gray-300 font-semibold">Xerfire Platform</span> &mdash; Engineered by <span class="text-gradient font-bold">Mayank Mandrai</span>
         </div>
         <div class="flex items-center gap-6">
-            <span>High Performance Storage</span>
+            <span>Universal Cloud</span>
             <span>Zero Remote Latency</span>
-            <span>Encrypted Streams</span>
+            <span>Direct Binary Streams</span>
         </div>
     </footer>
 
     <script>
-        // --- 1. CORE DATABASE ENGINE (IndexedDB) ---
-        const DB_NAME = 'XerfireDB';
-        const DB_VERSION = 1;
-
-        const openDB = () => {
-            return new Promise((resolve, reject) => {
-                const req = indexedDB.open(DB_NAME, DB_VERSION);
-                req.onupgradeneeded = (e) => {
-                    const db = e.target.result;
-                    if(!db.objectStoreNames.contains('files')) {
-                        const store = db.createObjectStore('files', { keyPath: 'id' });
-                        store.createIndex('ownerEmail', 'ownerEmail', { unique: false });
-                    }
-                };
-                req.onsuccess = () => resolve(req.result);
-                req.onerror = () => reject(req.error);
-            });
-        };
-
-        const dbSave = async (fileObj) => {
-            const db = await openDB();
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction('files', 'readwrite');
-                tx.objectStore('files').put(fileObj);
-                tx.oncomplete = () => resolve();
-                tx.onerror = () => reject(tx.error);
-            });
-        };
-
-        const dbGetFilesByUser = async (email) => {
-            const db = await openDB();
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction('files', 'readonly');
-                const store = tx.objectStore('files');
-                const index = store.index('ownerEmail');
-                const req = index.getAll(email);
-                req.onsuccess = () => resolve(req.result || []);
-                req.onerror = () => reject(req.error);
-            });
-        };
-
-        const dbGetFileById = async (id) => {
-            const db = await openDB();
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction('files', 'readonly');
-                const req = tx.objectStore('files').get(id);
-                req.onsuccess = () => resolve(req.result);
-                req.onerror = () => reject('File not found');
-            });
-        };
-
-        const dbDeleteFile = async (id) => {
-            const db = await openDB();
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction('files', 'readwrite');
-                tx.objectStore('files').delete(id);
-                tx.oncomplete = () => resolve();
-                tx.onerror = () => reject(tx.error);
-            });
-        };
-
-        // --- 2. AUTHENTICATION & MULTI-USER SYSTEM ---
+        // --- 1. AUTHENTICATION & MULTI-USER SYSTEM ---
         let currentAuthMode = 'login';
 
         const getUsersDB = () => JSON.parse(localStorage.getItem('xerfire_users') || '[]');
@@ -305,7 +243,7 @@
             renderApp();
         });
 
-        // --- 3. FORMAT HELPERS ---
+        // --- 2. FORMAT HELPER ---
         const formatBytes = (bytes) => {
             if (!bytes || bytes === 0) return '0 Bytes';
             const k = 1024;
@@ -314,12 +252,21 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         };
 
-        // --- 4. DASHBOARD & FILE MANAGER ---
-        const renderDashboardFiles = async () => {
+        // --- 3. DASHBOARD (USER-ISOLATED FILES) ---
+        const getUserFiles = () => {
             const user = getSession();
-            if(!user) return;
-            
-            const files = await dbGetFilesByUser(user);
+            return JSON.parse(localStorage.getItem(`xerfire_files_${user}`) || '[]');
+        };
+
+        const saveUserFileMeta = (fileData) => {
+            const user = getSession();
+            const files = getUserFiles();
+            files.unshift(fileData);
+            localStorage.setItem(`xerfire_files_${user}`, JSON.stringify(files));
+        };
+
+        const renderDashboardFiles = () => {
+            const files = getUserFiles();
             const listEl = document.getElementById('fileList');
             const noFilesMsg = document.getElementById('noFilesMsg');
             const badge = document.getElementById('fileCountBadge');
@@ -333,7 +280,7 @@
             }
             noFilesMsg.classList.add('hidden');
 
-            files.reverse().forEach(file => {
+            files.forEach(file => {
                 const item = document.createElement('div');
                 item.className = 'flex items-center justify-between p-3 rounded-2xl bg-black/30 border border-white/5 hover:border-white/10 transition-colors';
                 
@@ -371,11 +318,17 @@
         };
 
         window.deleteUserFile = async (id) => {
-            await dbDeleteFile(id);
+            const user = getSession();
+            let files = getUserFiles();
+            files = files.filter(f => f.id !== id);
+            localStorage.setItem(`xerfire_files_${user}`, JSON.stringify(files));
+            
+            // Delete from server
+            fetch(`/api/delete?fileId=${id}`, { method: 'DELETE' }).catch(() => {});
             renderDashboardFiles();
         };
 
-        // --- 5. INSTANT CHUNKED UPLOAD ENGINE ---
+        // --- 4. UNIVERSAL UPLOAD ENGINE ---
         const fileInput = document.getElementById('fileInput');
         fileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
@@ -387,69 +340,68 @@
             progressContainer.classList.remove('hidden');
             progressBar.style.width = '30%';
 
-            const fileId = 'xf_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('owner', user);
 
-            const buffer = await file.arrayBuffer();
-            progressBar.style.width = '75%';
-
-            await dbSave({
-                id: fileId,
-                ownerEmail: user,
-                name: file.name,
-                size: file.size,
-                type: file.type || 'application/octet-stream',
-                data: buffer,
-                createdAt: Date.now()
-            });
-
-            progressBar.style.width = '100%';
-            setTimeout(() => {
-                progressContainer.classList.add('hidden');
-                progressBar.style.width = '0%';
-                fileInput.value = '';
-                renderDashboardFiles();
-            }, 100);
+            try {
+                progressBar.style.width = '70%';
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                
+                progressBar.style.width = '100%';
+                if(data.success) {
+                    saveUserFileMeta({
+                        id: data.fileId,
+                        name: file.name,
+                        size: file.size,
+                        createdAt: Date.now()
+                    });
+                }
+            } catch (err) {
+                console.error("Upload error:", err);
+            } finally {
+                setTimeout(() => {
+                    progressContainer.classList.add('hidden');
+                    progressBar.style.width = '0%';
+                    fileInput.value = '';
+                    renderDashboardFiles();
+                }, 150);
+            }
         });
 
-        // --- 6. INSTANT DIRECT DOWNLOAD ENGINE (NO WAIT / NO TIMER) ---
-        const initDownloader = async (fileId) => {
-            const fileRecord = await dbGetFileById(fileId);
+        // --- 5. UNIVERSAL DIRECT DOWNLOAD ENGINE (AVAILABLE TO ANYONE) ---
+        const initUniversalDownloader = async (fileId) => {
             const nameEl = document.getElementById('dlFileName');
             const sizeEl = document.getElementById('dlFileSize');
             const downloadBtn = document.getElementById('directDownloadBtn');
 
-            if(!fileRecord) {
+            try {
+                const res = await fetch(`/api/info?fileId=${fileId}`);
+                if (!res.ok) throw new Error('File not found');
+                const fileInfo = await res.json();
+
+                nameEl.innerText = fileInfo.name;
+                sizeEl.innerText = formatBytes(fileInfo.size);
+
+                // Direct Server Download Stream (No warning & works everywhere)
+                downloadBtn.onclick = () => {
+                    window.location.href = `/api/download?fileId=${fileId}`;
+                };
+            } catch (err) {
                 nameEl.innerText = 'File Expired or Missing';
                 nameEl.classList.add('text-red-400');
                 downloadBtn.classList.remove('btn-gradient');
                 downloadBtn.classList.add('bg-gray-800', 'text-gray-500', 'cursor-not-allowed');
                 downloadBtn.innerHTML = '<span>File Unavailable</span>';
                 downloadBtn.disabled = true;
-                return;
             }
-
-            // Immediately display metadata
-            nameEl.innerText = fileRecord.name;
-            sizeEl.innerText = formatBytes(fileRecord.size);
-
-            // Directly attach instant safe binary download
-            downloadBtn.onclick = () => {
-                const blob = new Blob([fileRecord.data], { type: fileRecord.type || 'application/octet-stream' });
-                const blobUrl = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = blobUrl;
-                a.download = fileRecord.name;
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(blobUrl);
-                }, 500);
-            };
         };
 
-        // --- 7. ROUTER VIEW CONTROLLER ---
+        // --- 6. ROUTER VIEW CONTROLLER ---
         const renderApp = () => {
             const urlParams = new URLSearchParams(window.location.search);
             const fileId = urlParams.get('fileId');
@@ -464,9 +416,9 @@
             downloadView.classList.add('hidden');
 
             if(fileId) {
-                // Direct Downloader Mode (Instant)
+                // Anyone with the link reaches this directly
                 downloadView.classList.remove('hidden');
-                initDownloader(fileId);
+                initUniversalDownloader(fileId);
                 return;
             }
 
@@ -482,7 +434,6 @@
             }
         };
 
-        // Run
         renderApp();
     </script>
 </body>
