@@ -57,10 +57,9 @@
         </div>
     </nav>
 
-    <!-- AUTHENTICATION SCREEN (LOGIN / SIGNUP TABS) -->
+    <!-- AUTHENTICATION SCREEN (LOGIN / SIGNUP) -->
     <div id="authView" class="w-full max-w-md my-auto hidden">
         <div class="glass-panel p-8 rounded-3xl">
-            <!-- Tabs -->
             <div class="flex bg-black/40 p-1 rounded-2xl border border-white/5 mb-6">
                 <button id="tabLogin" class="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white/10 text-white">Login</button>
                 <button id="tabSignup" class="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all text-gray-400 hover:text-white">Sign Up</button>
@@ -71,16 +70,12 @@
             <form id="authForm" class="flex flex-col gap-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Email Address</label>
-                    <div class="relative">
-                        <input type="email" id="authEmail" required placeholder="name@domain.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-neonCyan outline-none transition-colors">
-                    </div>
+                    <input type="email" id="authEmail" required placeholder="name@domain.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-neonCyan outline-none transition-colors">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Password</label>
-                    <div class="relative">
-                        <input type="password" id="authPassword" required placeholder="Minimum 6 characters" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-neonCyan outline-none transition-colors">
-                    </div>
+                    <input type="password" id="authPassword" required placeholder="Minimum 6 characters" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-neonCyan outline-none transition-colors">
                 </div>
 
                 <button type="submit" id="authSubmitBtn" class="w-full btn-gradient py-3.5 rounded-xl mt-3 flex items-center justify-center gap-2">
@@ -93,7 +88,6 @@
 
     <!-- MAIN DASHBOARD VIEW (UPLOAD & USER FILE MANAGER) -->
     <div id="dashboardView" class="w-full max-w-4xl flex flex-col gap-8 my-auto hidden">
-        <!-- Upload Drop Area -->
         <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group">
             <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
             <div class="flex flex-col items-center justify-center text-center gap-4 py-6 pointer-events-none">
@@ -110,7 +104,6 @@
                 </div>
             </div>
             
-            <!-- Uploading Bar -->
             <div id="uploadProgressContainer" class="hidden absolute bottom-0 left-0 w-full h-1 bg-gray-800">
                 <div id="uploadProgressBar" class="h-full bg-gradient-to-r from-neonCyan to-neonPurple w-0 transition-all duration-150"></div>
             </div>
@@ -126,10 +119,7 @@
                 <span id="fileCountBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-gray-400">0 Files</span>
             </div>
 
-            <!-- File List Container -->
-            <div id="fileList" class="flex flex-col gap-2 max-h-[300px] overflow-y-auto custom-scroll pr-1">
-                <!-- Dynamically Inserted Items -->
-            </div>
+            <div id="fileList" class="flex flex-col gap-2 max-h-[300px] overflow-y-auto custom-scroll pr-1"></div>
             
             <div id="noFilesMsg" class="hidden py-8 text-center text-xs text-gray-500">
                 No files uploaded yet in your account.
@@ -137,7 +127,7 @@
         </div>
     </div>
 
-    <!-- DOWNLOAD ENGINE VIEW (OPENED BY SHARE LINK) -->
+    <!-- ZERO-WAIT INSTANT DOWNLOAD VIEW -->
     <div id="downloadView" class="w-full max-w-lg my-auto hidden">
         <div class="glass-panel p-8 rounded-3xl text-center flex flex-col items-center gap-6">
             <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
@@ -146,7 +136,7 @@
 
             <div>
                 <h3 class="text-xl font-bold">Xerfire Rapid Download Engine</h3>
-                <p class="text-xs text-gray-400 mt-1">Verified safe clean stream</p>
+                <p class="text-xs text-gray-400 mt-1">Instant pipeline ready &bull; Zero delay</p>
             </div>
 
             <div class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 flex flex-col gap-3 text-left">
@@ -164,18 +154,15 @@
                 </div>
             </div>
 
-            <div id="timerWrapper" class="flex items-center gap-3 text-xs text-gray-400">
-                <div class="w-4 h-4 border-2 border-neonCyan border-t-transparent rounded-full animate-spin"></div>
-                <span>Securing instant pipeline: <strong id="countdownText" class="text-white">2</strong>s</span>
-            </div>
-
-            <button id="directDownloadBtn" disabled class="w-full py-4 rounded-xl font-bold text-sm bg-white/5 text-gray-500 border border-white/5 cursor-not-allowed transition-all">
-                Initializing Direct Stream
+            <!-- Direct Instant Download Button (No Waiting / Timer) -->
+            <button id="directDownloadBtn" class="w-full py-4 rounded-xl font-bold text-sm btn-gradient cursor-pointer flex items-center justify-center gap-2">
+                <span>Download Now</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
             </button>
         </div>
     </div>
 
-    <!-- ABOUT SECTION & FOOTER -->
+    <!-- FOOTER / CREDITS -->
     <footer class="w-full max-w-6xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
         <div>
             <span class="text-gray-300 font-semibold">Xerfire Platform</span> &mdash; Engineered by <span class="text-gradient font-bold">Mayank Mandrai</span>
@@ -235,7 +222,7 @@
                 const tx = db.transaction('files', 'readonly');
                 const req = tx.objectStore('files').get(id);
                 req.onsuccess = () => resolve(req.result);
-                req.onerror = () => reject(req.error);
+                req.onerror = () => reject('File not found');
             });
         };
 
@@ -250,7 +237,7 @@
         };
 
         // --- 2. AUTHENTICATION & MULTI-USER SYSTEM ---
-        let currentAuthMode = 'login'; // 'login' or 'signup'
+        let currentAuthMode = 'login';
 
         const getUsersDB = () => JSON.parse(localStorage.getItem('xerfire_users') || '[]');
         const setUsersDB = (users) => localStorage.setItem('xerfire_users', JSON.stringify(users));
@@ -398,13 +385,12 @@
             const progressContainer = document.getElementById('uploadProgressContainer');
             const progressBar = document.getElementById('uploadProgressBar');
             progressContainer.classList.remove('hidden');
-            progressBar.style.width = '20%';
+            progressBar.style.width = '30%';
 
             const fileId = 'xf_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
 
-            // Read array buffer to guarantee clean binary storage
             const buffer = await file.arrayBuffer();
-            progressBar.style.width = '70%';
+            progressBar.style.width = '75%';
 
             await dbSave({
                 id: fileId,
@@ -422,60 +408,45 @@
                 progressBar.style.width = '0%';
                 fileInput.value = '';
                 renderDashboardFiles();
-            }, 200);
+            }, 100);
         });
 
-        // --- 6. SAFE DIRECT DOWNLOAD ENGINE (DANGEROUS WARNING FIXED) ---
+        // --- 6. INSTANT DIRECT DOWNLOAD ENGINE (NO WAIT / NO TIMER) ---
         const initDownloader = async (fileId) => {
             const fileRecord = await dbGetFileById(fileId);
             const nameEl = document.getElementById('dlFileName');
             const sizeEl = document.getElementById('dlFileSize');
-            const countdownEl = document.getElementById('countdownText');
             const downloadBtn = document.getElementById('directDownloadBtn');
-            const timerWrapper = document.getElementById('timerWrapper');
 
             if(!fileRecord) {
                 nameEl.innerText = 'File Expired or Missing';
                 nameEl.classList.add('text-red-400');
-                timerWrapper.classList.add('hidden');
+                downloadBtn.classList.remove('btn-gradient');
+                downloadBtn.classList.add('bg-gray-800', 'text-gray-500', 'cursor-not-allowed');
+                downloadBtn.innerHTML = '<span>File Unavailable</span>';
+                downloadBtn.disabled = true;
                 return;
             }
 
+            // Immediately display metadata
             nameEl.innerText = fileRecord.name;
             sizeEl.innerText = formatBytes(fileRecord.size);
 
-            let counter = 2;
-            const timer = setInterval(() => {
-                counter--;
-                countdownEl.innerText = counter;
-                if(counter <= 0) {
-                    clearInterval(timer);
-                    timerWrapper.classList.add('hidden');
-                    
-                    downloadBtn.removeAttribute('disabled');
-                    downloadBtn.className = 'w-full py-4 rounded-xl font-bold text-sm btn-gradient cursor-pointer flex items-center justify-center gap-2';
-                    downloadBtn.innerHTML = `
-                        <span>Start Direct Download</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    `;
-
-                    // Safe Click-Triggered Download to prevent Chrome Malware Flags
-                    downloadBtn.onclick = () => {
-                        const blob = new Blob([fileRecord.data], { type: fileRecord.type || 'application/octet-stream' });
-                        const blobUrl = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = blobUrl;
-                        a.download = fileRecord.name;
-                        document.body.appendChild(a);
-                        a.click();
-                        setTimeout(() => {
-                            document.body.removeChild(a);
-                            URL.revokeObjectURL(blobUrl);
-                        }, 500);
-                    };
-                }
-            }, 1000);
+            // Directly attach instant safe binary download
+            downloadBtn.onclick = () => {
+                const blob = new Blob([fileRecord.data], { type: fileRecord.type || 'application/octet-stream' });
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = blobUrl;
+                a.download = fileRecord.name;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(blobUrl);
+                }, 500);
+            };
         };
 
         // --- 7. ROUTER VIEW CONTROLLER ---
@@ -493,7 +464,7 @@
             downloadView.classList.add('hidden');
 
             if(fileId) {
-                // Direct Downloader Mode
+                // Direct Downloader Mode (Instant)
                 downloadView.classList.remove('hidden');
                 initDownloader(fileId);
                 return;
@@ -511,7 +482,7 @@
             }
         };
 
-        // Initialize Engine
+        // Run
         renderApp();
     </script>
 </body>
